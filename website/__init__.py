@@ -5,13 +5,16 @@ from flask_login import LoginManager
 from flask import Blueprint
 
 db = SQLAlchemy()
-DB_NAME = path.join(getcwd(), "instance", "database.db")
+if os.environ.get("VERCEL"):
+    db_path = "/tmp/app.db"
+else:
+    db_path = os.path.join(os.getcwd(), "instance", "app.db")
 
 def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "21133232"
     # qaysi malumotlar bazasiga ulanishi
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
     db.init_app(app)
 
     # blueprint
